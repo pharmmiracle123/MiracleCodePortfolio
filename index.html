@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>QuickLoan - Fast Microloans</title>
+  <!-- Tailwind via CDN in header (as requested) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+  <!-- Navbar Component -->
+  <header class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold">QL</div>
+        <span class="font-semibold text-lg">QUICKLOAN</span>
+      </a>
+      <nav class="hidden md:flex gap-6 items-center">
+        <a href="about.html" class="hover:text-indigo-600">About</a>
+        <a href="apply.html" class="hover:text-indigo-600">Apply</a>
+        <a href="signin.html" class="hover:text-indigo-600">Login</a>
+        <a href="admin.html" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Admin</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobileBtn" class="p-2 rounded-md border">Menu</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-12">
+    <!-- Hero -->
+    <section class="grid md:grid-cols-2 gap-8 items-center">
+      <div>
+        <h1 class="text-4xl font-extrabold leading-tight">Fast, transparent microloans — delivered instantly.</h1>
+        <p class="mt-4 text-gray-600">Borrow from ₦3,000 to ₦500,000. Simple terms, quick approvals, and flexible repayment.</p>
+        <div class="mt-6 flex gap-4">
+          <a href="apply.html" class="px-6 py-3 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700">Apply Now</a>
+          <a href="about.html" class="px-6 py-3 border rounded-md">Learn More</a>
+        </div>
+        <!-- Loan calculator card -->
+        <div class="mt-8 bg-white p-6 rounded-xl shadow-sm max-w-md">
+          <h3 class="font-semibold">Estimate your repayment</h3>
+          <div class="mt-4 grid grid-cols-2 gap-3">
+            <label class="text-sm text-gray-600">Amount (₦)</label>
+            <input id="loanAmount" type="number" value="30000" class="p-2 border rounded-md" />
+            <label class="text-sm text-gray-600">Term (months)</label>
+            <select id="loanTerm" class="p-2 border rounded-md">
+              <option>1</option>
+              <option>3</option>
+              <option>6</option>
+              <option>12</option>
+            </select>
+          </div>
+          <div class="mt-4 flex items-center justify-between">
+            <div>
+              <div class="text-sm text-gray-500">Interest</div>
+              <div id="interest" class="font-semibold">9.1%</div>
+            </div>
+            <div class="text-right">
+              <div class="text-sm text-gray-500">Monthly Repay</div>
+              <div id="monthly" class="font-semibold">₦0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="space-y-6">
+        <div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-8 rounded-xl shadow-inner">
+          <h3 class="font-semibold text-xl">Quick Loan ?</h3>
+          <ul class="mt-4 space-y-2 text-gray-600">
+            <li>✅ Fast approvals (minutes)</li>
+            <li>✅ Transparent fees & schedules</li>
+            <li>✅ Secure & regulated</li>
+            <li>✅ Repay via Paystack / Flutterwave</li>
+          </ul>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-white p-6 rounded-xl shadow-sm text-center">
+            <div class="text-2xl font-bold">₦3k</div>
+            <div class="text-sm text-gray-500">Minimum loan</div>
+          </div>
+          <div class="bg-white p-6 rounded-xl shadow-sm text-center">
+            <div class="text-2xl font-bold">₦500k</div>
+            <div class="text-sm text-gray-500">Max limit</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="mt-12 grid md:grid-cols-3 gap-6">
+      <div class="bg-white p-6 rounded-xl shadow-sm">
+        <h4 class="font-semibold">Quick Approval</h4>
+        <p class="mt-2 text-sm text-gray-500">Get decisions in minutes with minimal documentation.</p>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow-sm">
+        <h4 class="font-semibold">Flexible Repayment</h4>
+        <p class="mt-2 text-sm text-gray-500">Choose a term that fits your budget.</p>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow-sm">
+        <h4 class="font-semibold">Secure</h4>
+        <p class="mt-2 text-sm text-gray-500">Bank-level protections and encrypted data storage.</p>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="mt-12">
+      <h3 class="text-xl font-semibold">What customers say</h3>
+      <div class="mt-4 grid md:grid-cols-3 gap-4">
+        <div class="bg-white p-6 rounded-xl shadow-sm">
+          <p class="text-sm text-gray-600">QuickLoan saved me when I needed working capital quickly."</p>
+          <div class="mt-4 text-sm font-medium">— Ada</div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm">
+          <p class="text-sm text-gray-600">"Fast disbursement and clear terms."</p>
+          <div class="mt-4 text-sm font-medium">— Chinedu</div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm">
+          <p class="text-sm text-gray-600">"Customer support was very helpful."</p>
+          <div class="mt-4 text-sm font-medium">— Ife</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white mt-12 border-t">
+    <div class="max-w-7xl mx-auto px-4 py-8 flex flex-col md:flex-row justify-between items-start">
+      <div>
+        <div class="font-semibold">QuickLoan</div>
+        <div class="text-sm text-gray-600 mt-2">Fast microloans, fair terms.</div>
+      </div>
+      <div class="mt-4 md:mt-0 text-sm text-gray-600">
+        © 2025 QuickLoan. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Simple loan calculator demo
+    function calc() {
+      const amount = Number(document.getElementById('loanAmount').value) || 0;
+      const term = Number(document.getElementById('loanTerm').value) || 1;
+      const annualRate = 0.091; // 9.1% as example
+      const monthlyRate = annualRate / 12;
+      const monthly = (amount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -term)) || 0;
+      document.getElementById('monthly').innerText = '₦' + Math.round(monthly).toLocaleString();
+      document.getElementById('interest').innerText = (annualRate*100).toFixed(1) + '%';
+    }
+    document.getElementById('loanAmount').addEventListener('input', calc);
+    document.getElementById('loanTerm').addEventListener('change', calc);
+    calc();
+  </script>
+</body>
+</html>
