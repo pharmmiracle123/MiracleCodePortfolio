@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Music School Form - MiracleCode</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      animation: {
+        float: "float 6s ease-in-out infinite",
+        gradient: "gradient 12s ease infinite"
+      },
+      keyframes: {
+        float: {
+          "0%,100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-20px)" }
+        },
+        gradient: {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" }
+        }
+      }
+    }
+  }
+}
+</script>
+
+<!-- jsPDF Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</head>
+<body class="min-h-screen bg-gradient-to-r from-purple-700 via-indigo-700 to-blue-700 bg-[length:400%_400%] animate-gradient">
+
+<!-- Floating Music Notes -->
+<div class="fixed inset-0 pointer-events-none">
+  <span class="absolute left-10 top-20 text-4xl text-white/20 animate-float">🎵</span>
+  <span class="absolute right-16 top-40 text-5xl text-white/20 animate-float">🎶</span>
+  <span class="absolute left-1/2 top-10 text-3xl text-white/20 animate-float">🎼</span>
+</div>
+
+<div class="relative max-w-4xl mx-auto px-6 py-12">
+
+<!-- Header -->
+<div class="text-center mb-8">
+  <h1 class="text-4xl font-bold text-white">Music School Website Form</h1>
+  <p class="text-indigo-200 mt-2">Fill the form and generate professional WhatsApp & PDF submission</p>
+</div>
+
+<!-- Progress Bar -->
+<div class="w-full bg-white/30 rounded-full h-3 mb-8">
+  <div id="progress" class="bg-white h-3 rounded-full transition-all duration-500" style="width: 25%"></div>
+</div>
+
+<form id="musicForm" class="bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6">
+
+<!-- Step 1: Basic Info -->
+<div class="step">
+  <h2 class="step-title">Basic School Info</h2>
+  <input class="input" name="schoolName" placeholder="School Name" required>
+  <input class="input" name="tagline" placeholder="Tagline / Motto" required>
+  <input class="input" name="phone" placeholder="Contact Number" required>
+  <input class="input" name="email" type="email" placeholder="Email (optional)">
+</div>
+
+<!-- Step 2: About & Courses -->
+<div class="step hidden">
+  <h2 class="step-title">About, Courses & include Mission and Vision</h2>
+  <textarea class="input" name="about" rows="3" placeholder="About the School" required></textarea>
+  <textarea class="input" name="courses" rows="3" placeholder="Courses Offered (one per line)" required></textarea>
+</div>
+
+<!-- Step 3: Teachers & Features -->
+<div class="step hidden">
+  <h2 class="step-title">Teachers & Website Features</h2>
+  <textarea class="input" name="teachers" rows="3" placeholder="Teachers & Experience (one per line)" required></textarea>
+  <textarea class="input" name="features" rows="3" placeholder="Website Features Needed (one per line)" required></textarea>
+</div>
+
+<!-- Step 4: File Uploads -->
+<div class="step hidden">
+  <h2 class="step-title">Upload Files</h2>
+  <label class="block mb-2 font-medium text-indigo-700">School Logo</label>
+  <input type="file" id="logo" accept="image/*" class="input">
+  <label class="block mt-4 mb-2 font-medium text-indigo-700">School Images</label>
+  <input type="file" id="images" accept="image/*" multiple class="input">
+  <p class="text-sm text-gray-500 mt-2">Images will be included in the PDF only. WhatsApp cannot attach them automatically.</p>
+</div>
+
+<!-- Navigation Buttons -->
+<div class="flex justify-between pt-6">
+  <button type="button" id="prevBtn" class="px-6 py-2 rounded-lg bg-gray-200 hidden">Back</button>
+  <button type="button" id="nextBtn" class="px-6 py-2 rounded-lg bg-indigo-600 text-white">Next</button>
+  <button type="button" id="submitBtn" class="px-6 py-2 rounded-lg bg-green-600 text-white hidden">Send to WhatsApp & PDF</button>
+</div>
+
+</form>
+
+<footer class="text-center text-indigo-200 mt-10">
+Website Developed by <span class="text-white font-semibold">MiracleCode</span>
+</footer>
+
+</div>
+
+<script>
+let step = 0;
+const steps = document.querySelectorAll(".step");
+const progress = document.getElementById("progress");
+const nextBtn = document.getElementById("nextBtn");
+const prevBtn = document.getElementById("prevBtn");
+const submitBtn = document.getElementById("submitBtn");
+const form = document.getElementById("musicForm");
+
+// Show step function
+function showStep(n){
+  steps.forEach((s,i)=>s.classList.toggle("hidden", i!==n));
+  prevBtn.classList.toggle("hidden", n===0);
+  nextBtn.classList.toggle("hidden", n===steps.length-1);
+  submitBtn.classList.toggle("hidden", n!==steps.length-1);
+  progress.style.width = ((n+1)/steps.length)*100 + "%";
+}
+
+nextBtn.onclick = ()=>{ step++; showStep(step); };
+prevBtn.onclick = ()=>{ step--; showStep(step); };
+showStep(step);
+
+// WhatsApp & PDF Submission
+submitBtn.onclick = async ()=>{
+  const data = new FormData(form);
+  const schoolName = data.get("schoolName") || "-";
+  const tagline = data.get("tagline") || "-";
+  const phone = data.get("phone") || "-";
+  const email = data.get("email") || "-";
+  const about = data.get("about") || "-";
+  const courses = data.get("courses") || "-";
+  const teachers = data.get("teachers") || "-";
+  const features = data.get("features") || "-";
+
+  // TEMPLATE E for WhatsApp
+  const message = `
+══════════════════════════════
+📌 *MUSIC SCHOOL SUBMISSION*
+══════════════════════════════
+
+🏫 *School:* ${schoolName}  
+📌 *Tagline:* "${tagline}"  
+
+📞 *Phone:* ${phone}  
+✉️ *Email:* ${email}  
+
+──────────────────────────────
+📘 *About the School*  
+${about}
+
+──────────────────────────────
+🎼 *Courses Offered*  
+${courses.split("\n").map(c=>"• "+c).join("\n")}
+
+──────────────────────────────
+👥 *Teachers & Experience*  
+${teachers.split("\n").map(t=>"📍 "+t).join("\n")}
+
+──────────────────────────────
+🛠 *Website Features Requested*  
+${features.split("\n").map(f=>"✔ "+f).join("\n")}
+
+══════════════════════════════
+*Submitted via: Music School Website Form*
+══════════════════════════════
+👍 Thank you!
+`;
+
+  // Open WhatsApp link
+  const whatsappURL = `https://wa.me/2348169395022?text=${encodeURIComponent(message)}`;
+  window.open(whatsappURL, "_blank");
+
+  // Generate PDF with jsPDF
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF();
+  let y = 20;
+
+  pdf.setFontSize(16);
+  pdf.text("🎵 MUSIC SCHOOL SUBMISSION 🎵", 10, y);
+  y+=10;
+
+  pdf.setFontSize(12);
+  pdf.text(`School: ${schoolName}`, 10, y); y+=8;
+  pdf.text(`Tagline: ${tagline}`, 10, y); y+=8;
+  pdf.text(`Phone: ${phone}`, 10, y); y+=8;
+  pdf.text(`Email: ${email}`, 10, y); y+=10;
+
+  pdf.text("About the School:", 10, y); y+=8;
+  pdf.text(about, 10, y, { maxWidth: 180 }); y+=20;
+
+  pdf.text("Courses Offered:", 10, y); y+=8;
+  courses.split("\n").forEach(c=>{ pdf.text(`• ${c}`, 10, y); y+=8 });
+
+  y+=5;
+  pdf.text("Teachers & Experience:", 10, y); y+=8;
+  teachers.split("\n").forEach(t=>{ pdf.text(`• ${t}`, 10, y); y+=8 });
+
+  y+=5;
+  pdf.text("Website Features Requested:", 10, y); y+=8;
+  features.split("\n").forEach(f=>{ pdf.text(`✔ ${f}`, 10, y); y+=8 });
+
+  y+=10;
+  pdf.text("Submitted via: Music School Website Form", 10, y); y+=10;
+  pdf.text("Website Developed by MiracleCode", 10, y);
+
+  // Add logo if uploaded
+  const logoFile = document.getElementById("logo").files[0];
+  if(logoFile){
+    const reader = new FileReader();
+    reader.onload = function(e){
+      pdf.addImage(e.target.result, 'PNG', 150, 10, 40, 40);
+      pdf.save(`${schoolName.replace(/\s/g,"_")}_submission.pdf`);
+    }
+    reader.readAsDataURL(logoFile);
+  } else {
+    pdf.save(`${schoolName.replace(/\s/g,"_")}_submission.pdf`);
+  }
+}
+</script>
+
+<style>
+.input{
+  width:100%;
+  padding:0.8rem;
+  border-radius:0.75rem;
+  border:1px solid #c7d2fe;
+  margin-bottom:1rem;
+}
+.step-title{
+  font-size:1.25rem;
+  font-weight:600;
+  color:#4338ca;
+  margin-bottom:1rem;
+}
+</style>
+
+</body>
+</html>
