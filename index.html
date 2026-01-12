@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Employee Legal Agreement</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- PDF Tools -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+canvas { touch-action: none }
+.fade-in { animation: fadeIn 1s ease-out forwards }
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(20px) }
+  to { opacity:1; transform:translateY(0) }
+}
+</style>
+</head>
+
+<body class="bg-gradient-to-br from-gray-900 via-indigo-900 to-black min-h-screen p-4">
+
+<form id="agreementForm"
+ action="https://formsubmit.co/onyekaudechukwum@gmail.com"
+ method="POST"
+ enctype="multipart/form-data"
+ class="max-w-3xl mx-auto bg-white rounded-3xl shadow-2xl p-8 fade-in">
+
+<!-- CONFIG -->
+<input type="hidden" name="_subject" value="New Signed Employee Agreement">
+<input type="hidden" name="_captcha" value="false">
+<input type="hidden" name="_template" value="table">
+<input type="hidden" name="_next" value="success.html">
+
+<h1 class="text-3xl font-extrabold text-center text-indigo-700 mb-2">
+Employee Agreement & Legal Consent
+</h1>
+
+<p class="text-center text-sm text-gray-500 mb-6">
+Official digital employment & HR service agreement
+</p>
+
+<!-- AUTO DATA -->
+<input type="hidden" id="reference" name="Agreement Reference">
+<input type="hidden" id="timestamp" name="Date & Time Signed">
+
+<!-- EMPLOYEE DETAILS -->
+<input id="name" name="Employee Full Name" required
+ class="w-full border p-3 mb-3 rounded-lg"
+ placeholder="Employee Full Name">
+
+<input id="email" name="Employee Email" type="email" required
+ class="w-full border p-3 mb-3 rounded-lg"
+ placeholder="Employee Email Address">
+
+<input id="phone" name="Employee Phone Number" required
+ class="w-full border p-3 mb-3 rounded-lg"
+ placeholder="Employee Phone Number">
+
+<input id="role" name="Position" required
+ class="w-full border p-3 mb-5 rounded-lg"
+ placeholder="Position / Job Title">
+
+<!-- LEGAL NOTICE -->
+<div class="bg-red-50 border border-red-300 rounded-xl p-4 mb-5 text-sm text-red-800">
+<strong>Legal Notice:</strong><br>
+This agreement is legally binding. Any false declaration, refusal to remit the
+<strong>₦2,000 monthly HR service fee</strong>, or breach of agreement shall be
+subject to investigation and enforcement under applicable
+<strong>Nigerian Labour and Civil Laws</strong>.
+</div>
+
+<p class="text-sm text-gray-700 mb-5 leading-relaxed">
+By proceeding, the employee acknowledges engagement with the HR management
+service administered by <strong>Onyeka-Udechukwu Miracle (HR Manager)</strong>.
+</p>
+
+<label class="flex items-start gap-2 mb-6 text-sm">
+<input type="checkbox" id="agree" required class="scale-125 mt-1">
+<span>
+I confirm that all information provided is accurate, I understand the terms of
+this agreement, and I voluntarily consent to the ₦2,000 monthly obligation.
+</span>
+</label>
+
+<!-- SIGNATURE -->
+<h3 class="font-semibold mb-2">Employee Digital Signature</h3>
+<p class="text-xs text-gray-500 mb-2">
+Please sign clearly. This digital signature is legally valid.
+</p>
+
+<canvas id="signature" width="500" height="180"
+ class="border rounded-xl bg-gray-50 mb-3"></canvas>
+
+<button type="button" onclick="clearSignature()"
+ class="bg-red-500 text-white px-4 py-2 rounded mb-6 hover:scale-105 transition">
+Clear Signature
+</button>
+
+<!-- ID -->
+<h3 class="font-semibold mb-2">School or Department-Issued Identification</h3>
+<input name="Government ID" type="file" required
+ accept="image/*,.pdf" class="mb-6">
+
+<input type="file" name="Signed Agreement PDF" id="pdfFile" hidden>
+
+<button type="button" onclick="submitAgreement()"
+ class="w-full bg-indigo-700 text-white py-4 rounded-xl font-semibold
+ hover:bg-indigo-800 hover:scale-[1.02] transition shadow-lg">
+Submit & Finalize Agreement
+</button>
+
+<p class="text-xs text-center mt-6 text-gray-600">
+HR Manager: <strong>Onyeka-Udechukwu Miracle</strong><br>
+This document is digitally generated and legally enforceable
+</p>
+</form>
+<h1 class="text-3xl font-extrabold text-center text-indigo-700 mb-2">
+<b>IF IT DOESN'T SUBMIT, REFRESH THE NEXT PAGE AFTER CLICKING SUBMIT</b>
+</h1>
+<script>
+/* AUTO META */
+reference.value = "HR-" + Math.random().toString(36).substr(2,8).toUpperCase();
+timestamp.value = new Date().toLocaleString();
+
+/* SIGNATURE (SMOOTH) */
+const canvas = document.getElementById("signature");
+const ctx = canvas.getContext("2d");
+let drawing = false;
+ctx.lineWidth = 2.5;
+ctx.lineCap = "round";
+ctx.lineJoin = "round";
+
+canvas.addEventListener("pointerdown", e => {
+ drawing = true;
+ ctx.beginPath();
+ ctx.moveTo(e.offsetX, e.offsetY);
+});
+canvas.addEventListener("pointermove", e => {
+ if(!drawing) return;
+ ctx.lineTo(e.offsetX, e.offsetY);
+ ctx.stroke();
+});
+canvas.addEventListener("pointerup", ()=> drawing=false);
+
+function clearSignature(){
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+/* PDF */
+async function submitAgreement(){
+ if(!agree.checked){ alert("You must agree before submission."); return; }
+
+ const { jsPDF } = window.jspdf;
+ const pdf = new jsPDF();
+
+ const snap = await html2canvas(agreementForm,{scale:2});
+ pdf.addImage(snap.toDataURL(),"PNG",10,10,190,0);
+
+ pdf.addPage();
+ pdf.setFontSize(13);
+ pdf.text("Monthly ₦2,000 HR Service Acknowledgment",20,30);
+ pdf.setFontSize(11);
+ pdf.text(
+"I hereby acknowledge my obligation to remit ₦2,000 monthly as an HR service fee.\n" +
+"This obligation remains valid throughout my engagement period.",
+20,50);
+
+ pdf.addPage();
+ pdf.text("Employee Signature",20,30);
+ pdf.addImage(canvas.toDataURL(),"PNG",20,40,150,50);
+ pdf.text("Reference: "+reference.value,20,100);
+ pdf.text("Signed: "+timestamp.value,20,110);
+
+ const blob = pdf.output("blob");
+ const file = new File([blob],"Employee_Agreement.pdf",{type:"application/pdf"});
+ const dt = new DataTransfer();
+ dt.items.add(file);
+ pdfFile.files = dt.files;
+
+ agreementForm.submit();
+}
+</script>
+
+</body>
+</html>
